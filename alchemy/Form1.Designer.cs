@@ -165,7 +165,6 @@ namespace alchemy
             this.checkedListBoxFacts.ScrollAlwaysVisible = true;
             this.checkedListBoxFacts.Size = new System.Drawing.Size(203, 394);
             this.checkedListBoxFacts.TabIndex = 0;
-            this.checkedListBoxFacts.SelectedIndexChanged += new System.EventHandler(this.checkedListBoxFacts_SelectedIndexChanged);
             // 
             // label1
             // 
@@ -326,6 +325,7 @@ namespace alchemy
             this.textBoxSolution.Location = new System.Drawing.Point(232, 105);
             this.textBoxSolution.Multiline = true;
             this.textBoxSolution.Name = "textBoxSolution";
+            this.textBoxSolution.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.textBoxSolution.Size = new System.Drawing.Size(556, 329);
             this.textBoxSolution.TabIndex = 5;
             // 
