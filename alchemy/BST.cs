@@ -104,6 +104,15 @@ namespace alchemy
                     : currentNode.RightNode == null
                         ? (currentNode.RightNode = node)
                         : Add(node, currentNode.RightNode);
+            /*
+            return (result = node.Data.CompareTo(currentNode.Data)) <= 0
+                ? currentNode.LeftNode == null
+                        ? (currentNode.LeftNode = node)
+                        : Add(node, currentNode.LeftNode)
+                    : currentNode.RightNode == null
+                        ? (currentNode.RightNode = node)
+                        : Add(node, currentNode.RightNode);
+             */
         }
 
         /// <summary>

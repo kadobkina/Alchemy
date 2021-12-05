@@ -17,6 +17,7 @@ namespace alchemy
         List<string> rules = new List<string>();
         List<string> facts = new List<string>();
         List<string> solution = new List<string>();
+        List<Tuple<string, int>> ssolution = new List<Tuple<string, int>>();
         bool finded = true;
         BinaryTree<string> bst = new BinaryTree<string>();
         Dictionary<string, string> allFacts = new Dictionary<string, string>();
@@ -32,6 +33,8 @@ namespace alchemy
             facts.Clear();
             rules.Clear();
             solution.Clear();
+            ssolution.Clear();
+            allFacts.Clear();
             textBoxSolution.Text = "";
             answer = comboBoxOutput.SelectedItem.ToString();
 
@@ -74,14 +77,52 @@ namespace alchemy
             {
                 textBoxSolution.Text += "Желаемый результат: " + answer + Environment.NewLine + "Способ получения:" + Environment.NewLine;
                 findSolution();
-                string res = "";
-                bst.PrintTree(ref res);
-                textBoxSolution.Text += Environment.NewLine + "Можно получить из: " + Environment.NewLine;
-                textBoxSolution.Text += Environment.NewLine + res;
-                // foreach (string s in solution)
-                // {
-                //     textBoxSolution.Text += allFacts[s] + Environment.NewLine;
-                // }
+                //string res = "";
+                //bst.PrintTree(ref res);
+                textBoxSolution.Text += Environment.NewLine + "Можно получить из: ";
+                //textBoxSolution.Text += Environment.NewLine + res;
+                /*    var l = ssolution.FindAll(x => x.Item2 == true);
+                    List<int> indxs = new List<int>();
+                    foreach (var el in l)
+                        indxs.Add(ssolution.FindIndex(x => x == el));
+                    for (int i = 0; i < ssolution.Count-1; i++)
+                    {
+                        if (indxs.Contains(i))
+                            textBoxSolution.Text += Environment.NewLine;
+                        textBoxSolution.Text += Environment.NewLine + allFacts[ssolution[i].Item1];
+                    }
+                */
+
+                /*                Dictionary<int, int> checkPrint = new Dictionary<int, int>();
+                                checkPrint[0] = 1;
+                                for (int i = 0; i < ssolution.Count - 1; i++)
+                                {
+                                    if (!checkPrint.ContainsKey(ssolution[i].Item2))
+                                    {
+                                        checkPrint[ssolution[i].Item2] = 1;
+                                        textBoxSolution.Text += Environment.NewLine + allFacts[ssolution[i].Item1];
+                                    }
+                                    else if (checkPrint[ssolution[i].Item2] < 2)
+                                    {
+                                        checkPrint[ssolution[i].Item2]++;
+                                        textBoxSolution.Text += Environment.NewLine + allFacts[ssolution[i].Item1];
+                                    }
+                                    else
+                                    {
+                                        textBoxSolution.Text += Environment.NewLine;
+                                    }
+
+                                }*/
+
+                for (int i = 0; i < ssolution.Count - 1; i++)
+                {
+                    textBoxSolution.Text += Environment.NewLine;
+                    for (int j = 0; j < ssolution[i].Item2; j++)
+                        textBoxSolution.Text += "  ";
+                    textBoxSolution.Text += ssolution[i].Item2 + " ";
+                    textBoxSolution.Text += allFacts[ssolution[i].Item1];
+                }
+
             }
             answer = "";
         }
@@ -315,12 +356,13 @@ search:
             }
 
             string fact = answer;
-            Stack<string> stack = new Stack<string>();
-            stack.Push(fact);
-            bst.Add(fact);
+            Stack<Tuple<string,int>> stack = new Stack<Tuple<string, int>>();
+            stack.Push(Tuple.Create(fact, 0));
+            //bst.Add(fact);
             Queue<string> queue = new Queue<string>();
-            solution.Add(fact);
+            //solution.Add(fact);
             //queue.Enqueue(fact);
+            int check = 1;
        
  searchh:           //string[] factsInRule;
             foreach (var rule in allRules)
@@ -332,8 +374,17 @@ search:
                     //bst.FindNode(fact).RightNode.Data = splitRule[0].Split(',')[1];
                     //queue.Enqueue(splitRule[0].Split(',')[0]);
                     //queue.Enqueue(splitRule[0].Split(',')[1]);
-                    stack.Push(splitRule[0].Split(',')[0]);
-                    stack.Push(splitRule[0].Split(',')[1]);
+                   // if (check == 1)
+                   // {
+                        stack.Push(Tuple.Create(splitRule[0].Split(',')[0], check));
+                        stack.Push(Tuple.Create(splitRule[0].Split(',')[1], check));
+                    //  }
+                    // else
+                    // {
+                    //     stack.Push(Tuple.Create(splitRule[0].Split(',')[0], false));
+                    //     stack.Push(Tuple.Create(splitRule[0].Split(',')[1], false));
+                    // }
+                    check++;
                     break;
                 }
             }
@@ -351,9 +402,10 @@ search:
                         }*/
             if (stack.Count() != 0)
             {
-                fact = stack.Pop();
-                bst.Add(fact);
-                solution.Add(fact);
+                var t = stack.Pop();
+                //bst.Add(fact);
+                ssolution.Add(t);
+                fact = t.Item1;
             }
             //fact = stack.Pop();
             //bst.Add(fact);
@@ -364,9 +416,10 @@ search:
             }*/
             if (stack.Count() == 1 && (fact == "f-1" || fact == "f-2" || fact == "f-3" || fact == "f-4"))
             {
-                fact = stack.Pop();
-                bst.Add(fact);
-                solution.Add(fact);
+                var t = stack.Pop();
+                //bst.Add(fact);
+                ssolution.Add(t);
+                fact = t.Item1;
             }
             else if (stack.Count() > 1)
                 goto searchh;
