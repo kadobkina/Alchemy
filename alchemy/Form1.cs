@@ -18,6 +18,8 @@ namespace alchemy
         List<string> facts = new List<string>();
         List<string> solution = new List<string>();
         bool finded = true;
+        BinaryTree<string> bst = new BinaryTree<string>();
+        Dictionary<string, string> allFacts = new Dictionary<string, string>();
 
         public Form1()
         {
@@ -33,50 +35,60 @@ namespace alchemy
             textBoxSolution.Text = "";
             answer = comboBoxOutput.SelectedItem.ToString();
 
-            foreach (var f in checkedListBoxFacts.CheckedItems)
+            // прямой вывод
+            if (checkedListBoxFacts.CheckedItems.Count != 0)
             {
-                facts.Add(f.ToString());
-            }
+                foreach (var f in checkedListBoxFacts.CheckedItems)
+                {
+                    facts.Add(f.ToString());
+                }
 
-            textBoxSolution.Text = "Ингредиенты: ";
-            foreach (var f in facts)
-                textBoxSolution.Text += f.Split(';')[1] + " ";
-            textBoxSolution.Text += Environment.NewLine + "Желаемый результат: " + answer;
+                textBoxSolution.Text = "Ингредиенты: ";
+                foreach (var f in facts)
+                    textBoxSolution.Text += f.Split(';')[1] + " ";
+                textBoxSolution.Text += Environment.NewLine + "Желаемый результат: " + answer;
 
-            checkSolvability();
+                checkSolvability();
 
-            textBoxSolution.Text += Environment.NewLine;
-            //foreach (var r in rules)
-            //    textBoxSolution.Text += Environment.NewLine + r;
+                textBoxSolution.Text += Environment.NewLine;
+                //foreach (var r in rules)
+                //    textBoxSolution.Text += Environment.NewLine + r;
 
-            if (solution.Count() != 0)
-            {
-                solution = solution.Distinct().ToList();
-                textBoxSolution.Text += Environment.NewLine + "Можно получить: " + Environment.NewLine;
-                foreach (string s in solution)
-                    textBoxSolution.Text += s + Environment.NewLine;
+                if (solution.Count() != 0)
+                {
+                    solution = solution.Distinct().ToList();
+                    textBoxSolution.Text += Environment.NewLine + "Можно получить: " + Environment.NewLine;
+                    foreach (string s in solution)
+                        textBoxSolution.Text += s + Environment.NewLine;
 
-                if (finded)
-                    textBoxSolution.Text += Environment.NewLine + "Получен желаемый результат!" + Environment.NewLine;
+                    if (finded)
+                        textBoxSolution.Text += Environment.NewLine + "Получен желаемый результат!" + Environment.NewLine;
+                    else
+                        textBoxSolution.Text += Environment.NewLine + "Не найдено способов получения желаемого результата" + Environment.NewLine;
+                }
                 else
-                    textBoxSolution.Text += Environment.NewLine + "Не найдено способов получения желаемого результата" + Environment.NewLine;
+                    textBoxSolution.Text += "Не найдены возможные решения";
             }
+            // обратный вывод
             else
-                textBoxSolution.Text += "Не найдены возможные решения";
-
+            {
+                textBoxSolution.Text += "Желаемый результат: " + answer + Environment.NewLine + "Способ получения:" + Environment.NewLine;
+                findSolution();
+                string res = "";
+                bst.PrintTree(ref res);
+                textBoxSolution.Text += Environment.NewLine + "Можно получить из: " + Environment.NewLine;
+                textBoxSolution.Text += Environment.NewLine + res;
+                // foreach (string s in solution)
+                // {
+                //     textBoxSolution.Text += allFacts[s] + Environment.NewLine;
+                // }
+            }
             answer = "";
         }
 
         private void comboBoxOutput_SelectedIndexChanged(object sender, EventArgs e)
         {
             buttonCheckSolution.Enabled = true;
-
-            foreach (var f in checkedListBoxFacts.CheckedItems)
-            {
-                facts.Add(f.ToString());
-            }
-
-            answer = comboBoxOutput.SelectedItem.ToString();
         }
 
         // Проверяет можно ли из данных фактов вывести желаемый рузальтат. Если да - какими продукциями (прямой вывод)
@@ -263,6 +275,107 @@ search:
         // Находит способы вывести желаемый результат (обратный вывод)
         void findSolution()
         {
+            using (StreamReader sr = new StreamReader("../../facts.txt", System.Text.Encoding.UTF8))
+            {
+                string line;
+                while ((line = sr.ReadLine()) != null)
+                {
+                    string[] splitLine = line.Split(';');
+                    if (answer.Equals(splitLine[1]))
+                    {
+                        answer = splitLine[0]; // теперь ответ - номер факта
+                        break;
+                    }
+                }
+            }
+
+            Dictionary<string, string> allRules = new Dictionary<string, string>();
+            using (StreamReader sr = new StreamReader("../../rules.txt", System.Text.Encoding.UTF8))
+            {
+                string line;
+                while ((line = sr.ReadLine()) != null)
+                {
+                    // string[] tempLine = line.Split()[0].Split(';');
+                    string[] tempLine = line.Split();
+
+                    string ruleID = tempLine[0].Split(';')[0];
+                    // все правила из файла
+                    allRules[ruleID] = line.Substring(ruleID.Length + 1);
+                }
+            }
+
+            using (StreamReader sr = new StreamReader("../../facts.txt", System.Text.Encoding.UTF8))
+            {
+                string line;
+                while ((line = sr.ReadLine()) != null)
+                {
+                    string[] splitLine = line.Split(';');
+                    allFacts[splitLine[0]] = splitLine[1];
+                }
+            }
+
+            string fact = answer;
+            Stack<string> stack = new Stack<string>();
+            stack.Push(fact);
+            bst.Add(fact);
+            Queue<string> queue = new Queue<string>();
+            solution.Add(fact);
+            //queue.Enqueue(fact);
+       
+ searchh:           //string[] factsInRule;
+            foreach (var rule in allRules)
+            {
+                var splitRule = rule.Value.Split(';');
+                if (splitRule[1] == fact)
+                {
+                    //bst.FindNode(fact).LeftNode.Data = splitRule[0].Split(',')[0];
+                    //bst.FindNode(fact).RightNode.Data = splitRule[0].Split(',')[1];
+                    //queue.Enqueue(splitRule[0].Split(',')[0]);
+                    //queue.Enqueue(splitRule[0].Split(',')[1]);
+                    stack.Push(splitRule[0].Split(',')[0]);
+                    stack.Push(splitRule[0].Split(',')[1]);
+                    break;
+                }
+            }
+            //fact = queue.Dequeue();
+            //fact = stack.Pop();
+            /*            if (bst.FindNode(fact).LeftNode == null)
+                        {
+                            fact = stack.Pop();
+                            bst.FindNode(fact).LeftNode = new Node<string>(fact);
+                        }
+                        else
+                        {
+                            fact = stack.Pop();
+                            bst.FindNode(fact).RightNode = new Node<string>(fact);
+                        }*/
+            if (stack.Count() != 0)
+            {
+                fact = stack.Pop();
+                bst.Add(fact);
+                solution.Add(fact);
+            }
+            //fact = stack.Pop();
+            //bst.Add(fact);
+           /* if (fact == "f-1" || fact == "f-2" || fact == "f-3" || fact == "f-4")
+            {
+                fact = stack.Pop();
+                bst.Add(fact);
+            }*/
+            if (stack.Count() == 1 && (fact == "f-1" || fact == "f-2" || fact == "f-3" || fact == "f-4"))
+            {
+                fact = stack.Pop();
+                bst.Add(fact);
+                solution.Add(fact);
+            }
+            else if (stack.Count() > 1)
+                goto searchh;
+            if (stack.Count() == 1 && !(fact == "f-1" || fact == "f-2" || fact == "f-3" || fact == "f-4"))
+                goto searchh;
+            //  while(true)
+            //  {
+            //
+            //  }
 
         }
     }
