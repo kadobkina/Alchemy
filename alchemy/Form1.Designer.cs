@@ -35,6 +35,7 @@ namespace alchemy
             this.comboBoxOutput = new System.Windows.Forms.ComboBox();
             this.buttonCheckSolution = new System.Windows.Forms.Button();
             this.textBoxSolution = new System.Windows.Forms.TextBox();
+            this.buttonBackward = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // checkedListBoxFacts
@@ -160,27 +161,30 @@ namespace alchemy
             "f-117;Вино",
             "f-118;Фрукт",
             "f-119;Птичий грипп"});
-            this.checkedListBoxFacts.Location = new System.Drawing.Point(12, 40);
+            this.checkedListBoxFacts.Location = new System.Drawing.Point(18, 62);
+            this.checkedListBoxFacts.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.checkedListBoxFacts.Name = "checkedListBoxFacts";
             this.checkedListBoxFacts.ScrollAlwaysVisible = true;
-            this.checkedListBoxFacts.Size = new System.Drawing.Size(203, 394);
+            this.checkedListBoxFacts.Size = new System.Drawing.Size(302, 602);
             this.checkedListBoxFacts.TabIndex = 0;
             // 
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(23, 24);
+            this.label1.Location = new System.Drawing.Point(34, 37);
+            this.label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(87, 13);
+            this.label1.Size = new System.Drawing.Size(128, 20);
             this.label1.TabIndex = 1;
             this.label1.Text = "Что у нас есть?";
             // 
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(266, 40);
+            this.label2.Location = new System.Drawing.Point(399, 62);
+            this.label2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(113, 13);
+            this.label2.Size = new System.Drawing.Size(172, 20);
             this.label2.TabIndex = 2;
             this.label2.Text = "Что хотим получить?";
             // 
@@ -303,43 +307,60 @@ namespace alchemy
             "Энты",
             "Яйцо",
             "Ящерица"});
-            this.comboBoxOutput.Location = new System.Drawing.Point(269, 61);
+            this.comboBoxOutput.Location = new System.Drawing.Point(404, 94);
+            this.comboBoxOutput.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.comboBoxOutput.Name = "comboBoxOutput";
-            this.comboBoxOutput.Size = new System.Drawing.Size(159, 21);
+            this.comboBoxOutput.Size = new System.Drawing.Size(236, 28);
             this.comboBoxOutput.TabIndex = 3;
             this.comboBoxOutput.SelectedIndexChanged += new System.EventHandler(this.comboBoxOutput_SelectedIndexChanged);
             // 
             // buttonCheckSolution
             // 
             this.buttonCheckSolution.Enabled = false;
-            this.buttonCheckSolution.Location = new System.Drawing.Point(482, 40);
+            this.buttonCheckSolution.Location = new System.Drawing.Point(723, 62);
+            this.buttonCheckSolution.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.buttonCheckSolution.Name = "buttonCheckSolution";
-            this.buttonCheckSolution.Size = new System.Drawing.Size(75, 23);
+            this.buttonCheckSolution.Size = new System.Drawing.Size(150, 35);
             this.buttonCheckSolution.TabIndex = 4;
-            this.buttonCheckSolution.Text = "Проверить";
+            this.buttonCheckSolution.Text = "Прямой вывод";
             this.buttonCheckSolution.UseVisualStyleBackColor = true;
             this.buttonCheckSolution.Click += new System.EventHandler(this.buttonCheckSolution_Click);
             // 
             // textBoxSolution
             // 
-            this.textBoxSolution.Location = new System.Drawing.Point(232, 105);
+            this.textBoxSolution.Location = new System.Drawing.Point(348, 162);
+            this.textBoxSolution.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.textBoxSolution.Multiline = true;
             this.textBoxSolution.Name = "textBoxSolution";
             this.textBoxSolution.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.textBoxSolution.Size = new System.Drawing.Size(556, 329);
+            this.textBoxSolution.Size = new System.Drawing.Size(832, 504);
             this.textBoxSolution.TabIndex = 5;
+            // 
+            // buttonBackward
+            // 
+            this.buttonBackward.Enabled = false;
+            this.buttonBackward.Location = new System.Drawing.Point(946, 62);
+            this.buttonBackward.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.buttonBackward.Name = "buttonBackward";
+            this.buttonBackward.Size = new System.Drawing.Size(150, 35);
+            this.buttonBackward.TabIndex = 6;
+            this.buttonBackward.Text = "Обратный вывод";
+            this.buttonBackward.UseVisualStyleBackColor = true;
+            this.buttonBackward.Click += new System.EventHandler(this.buttonBackward_Click);
             // 
             // Form1
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 450);
+            this.ClientSize = new System.Drawing.Size(1200, 692);
+            this.Controls.Add(this.buttonBackward);
             this.Controls.Add(this.textBoxSolution);
             this.Controls.Add(this.buttonCheckSolution);
             this.Controls.Add(this.comboBoxOutput);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.checkedListBoxFacts);
+            this.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.Name = "Form1";
             this.Text = "Form1";
             this.ResumeLayout(false);
@@ -355,6 +376,7 @@ namespace alchemy
         private System.Windows.Forms.ComboBox comboBoxOutput;
         private System.Windows.Forms.Button buttonCheckSolution;
         private System.Windows.Forms.TextBox textBoxSolution;
+        private System.Windows.Forms.Button buttonBackward;
     }
 }
 
