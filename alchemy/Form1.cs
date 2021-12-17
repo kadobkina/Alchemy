@@ -382,7 +382,7 @@ namespace alchemy
                     string ruleID = tempLine[0].Split(';')[0];
                     string factID = tempLine[0].Split(';')[2];
                     // все правила из файла
-                    allRules[factID] = line.Substring(ruleID.Length + 1);
+                    allRules[ruleID] = line.Substring(ruleID.Length + 1);
                 }
             }
 
@@ -484,19 +484,21 @@ namespace alchemy
             //  }
 
 
-              foreach (var rule in allRules)
-              {
-                  int tempCount = 0;
-                  if (Int32.Parse(rule.Key.Split('-')[1]) > Int32.Parse(answer.Split('-')[1]))
-                      break;
-                  var temp = rule.Value.Split(';')[0].Split(',');
-                  foreach (var f in temp)
-                      if (tempSolution.Contains(f))
-                          tempCount++;
-                  if (tempSolution.Contains(rule.Key) || tempCount==2)
-                      ssolution.Add(rule.Value);
-              }
-            ssolution.Add(allRules[answer]);
+            foreach (var rule in allRules)
+            {
+                int tempCount = 0;
+                // if (Int32.Parse(rule.Value.Split(';')[1].Split('-')[1]) > Int32.Parse(answer.Split('-')[1]))
+                //   break;
+                var temp = rule.Value.Split(';')[0].Split(',');
+                foreach (var f in temp)
+                    if (tempSolution.Contains(f))
+                        tempCount++;
+                if (/*tempSolution.Contains(rule.Value.Split(';')[1]) ||*/ tempCount == 2)
+                    ssolution.Add(rule.Value);
+                if (Int32.Parse(rule.Value.Split(';')[1].Split('-')[1]) == Int32.Parse(answer.Split('-')[1]))
+                    ssolution.Add(rule.Value);
+            }
+
             ssolution = ssolution.Distinct().ToList();
 
             /*   foreach (var r in tempSolution)
