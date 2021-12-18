@@ -495,7 +495,7 @@ namespace alchemy
                         tempCount++;
                 if (/*tempSolution.Contains(rule.Value.Split(';')[1]) ||*/ tempCount == 2)
                     ssolution.Add(rule.Value);
-                if (Int32.Parse(rule.Value.Split(';')[1].Split('-')[1]) == Int32.Parse(answer.Split('-')[1]))
+                if (Int32.Parse(rule.Value.Split(';')[1].Split('-')[1]) == Int32.Parse(answer.Split('-')[1]) && ssolution.Count != 0)
                     ssolution.Add(rule.Value);
             }
 
