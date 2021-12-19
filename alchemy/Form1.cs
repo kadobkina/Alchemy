@@ -105,52 +105,58 @@ namespace alchemy
                 findSolution();
                 //string res = "";
                 //bst.PrintTree(ref res);
-                textBoxSolution.Text += Environment.NewLine + "Способ получения: " + Environment.NewLine;
-                //textBoxSolution.Text += Environment.NewLine + res;
-                /*    var l = ssolution.FindAll(x => x.Item2 == true);
-                    List<int> indxs = new List<int>();
-                    foreach (var el in l)
-                        indxs.Add(ssolution.FindIndex(x => x == el));
-                    for (int i = 0; i < ssolution.Count-1; i++)
-                    {
-                        if (indxs.Contains(i))
-                            textBoxSolution.Text += Environment.NewLine;
-                        textBoxSolution.Text += Environment.NewLine + allFacts[ssolution[i].Item1];
-                    }
-                */
+                if (ssolution.Count() != 0)
+                {
+                    textBoxSolution.Text += Environment.NewLine + "Способ получения: " + Environment.NewLine;
+                    //textBoxSolution.Text += Environment.NewLine + res;
+                    /*    var l = ssolution.FindAll(x => x.Item2 == true);
+                        List<int> indxs = new List<int>();
+                        foreach (var el in l)
+                            indxs.Add(ssolution.FindIndex(x => x == el));
+                        for (int i = 0; i < ssolution.Count-1; i++)
+                        {
+                            if (indxs.Contains(i))
+                                textBoxSolution.Text += Environment.NewLine;
+                            textBoxSolution.Text += Environment.NewLine + allFacts[ssolution[i].Item1];
+                        }
+                    */
 
-                /*                Dictionary<int, int> checkPrint = new Dictionary<int, int>();
-                                checkPrint[0] = 1;
-                                for (int i = 0; i < ssolution.Count - 1; i++)
-                                {
-                                    if (!checkPrint.ContainsKey(ssolution[i].Item2))
+                    /*                Dictionary<int, int> checkPrint = new Dictionary<int, int>();
+                                    checkPrint[0] = 1;
+                                    for (int i = 0; i < ssolution.Count - 1; i++)
                                     {
-                                        checkPrint[ssolution[i].Item2] = 1;
-                                        textBoxSolution.Text += Environment.NewLine + allFacts[ssolution[i].Item1];
-                                    }
-                                    else if (checkPrint[ssolution[i].Item2] < 2)
-                                    {
-                                        checkPrint[ssolution[i].Item2]++;
-                                        textBoxSolution.Text += Environment.NewLine + allFacts[ssolution[i].Item1];
-                                    }
-                                    else
-                                    {
-                                        textBoxSolution.Text += Environment.NewLine;
-                                    }
+                                        if (!checkPrint.ContainsKey(ssolution[i].Item2))
+                                        {
+                                            checkPrint[ssolution[i].Item2] = 1;
+                                            textBoxSolution.Text += Environment.NewLine + allFacts[ssolution[i].Item1];
+                                        }
+                                        else if (checkPrint[ssolution[i].Item2] < 2)
+                                        {
+                                            checkPrint[ssolution[i].Item2]++;
+                                            textBoxSolution.Text += Environment.NewLine + allFacts[ssolution[i].Item1];
+                                        }
+                                        else
+                                        {
+                                            textBoxSolution.Text += Environment.NewLine;
+                                        }
 
-                                }*/
+                                    }*/
 
-                /*  for (int i = 0; i < ssolution.Count - 1; i++)
-                  {
-                      textBoxSolution.Text += Environment.NewLine;
-                      for (int j = 0; j < ssolution[i].Item2; j++)
-                          textBoxSolution.Text += "  ";
-                      textBoxSolution.Text += ssolution[i].Item2 + " ";
-                      textBoxSolution.Text += allFacts[ssolution[i].Item1];
-                  }*/
-                foreach (var s in ssolution)
-                    textBoxSolution.Text += s + Environment.NewLine;
-
+                    /*  for (int i = 0; i < ssolution.Count - 1; i++)
+                      {
+                          textBoxSolution.Text += Environment.NewLine;
+                          for (int j = 0; j < ssolution[i].Item2; j++)
+                              textBoxSolution.Text += "  ";
+                          textBoxSolution.Text += ssolution[i].Item2 + " ";
+                          textBoxSolution.Text += allFacts[ssolution[i].Item1];
+                      }*/
+                    foreach (var s in ssolution)
+                        textBoxSolution.Text += s + Environment.NewLine;
+                }
+                else
+                {
+                    textBoxSolution.Text += Environment.NewLine + "Не найдены возможные решения";
+                }
             }
             else
             {
@@ -370,6 +376,7 @@ namespace alchemy
                 }
             }
 
+            string answerRule = "";
             Dictionary<string, string> allRules = new Dictionary<string, string>();
             using (StreamReader sr = new StreamReader("../../rules.txt", System.Text.Encoding.UTF8))
             {
@@ -383,6 +390,8 @@ namespace alchemy
                     string factID = tempLine[0].Split(';')[2];
                     // все правила из файла
                     allRules[ruleID] = line.Substring(ruleID.Length + 1);
+                    if (factID == answer)
+                        answerRule = allRules[ruleID];
                 }
             }
 
@@ -487,19 +496,41 @@ namespace alchemy
             foreach (var rule in allRules)
             {
                 int tempCount = 0;
-                // if (Int32.Parse(rule.Value.Split(';')[1].Split('-')[1]) > Int32.Parse(answer.Split('-')[1]))
-                //   break;
+                if (Int32.Parse(rule.Value.Split(';')[1].Split('-')[1]) > Int32.Parse(answer.Split('-')[1]))
+                   break;
                 var temp = rule.Value.Split(';')[0].Split(',');
                 foreach (var f in temp)
-                    if (tempSolution.Contains(f))
+                    if (tempSolution.Contains(f) || ssolution.Contains(f))
                         tempCount++;
                 if (/*tempSolution.Contains(rule.Value.Split(';')[1]) ||*/ tempCount == 2)
                     ssolution.Add(rule.Value);
                 if (Int32.Parse(rule.Value.Split(';')[1].Split('-')[1]) == Int32.Parse(answer.Split('-')[1]) && ssolution.Count != 0)
+                {
                     ssolution.Add(rule.Value);
+
+                }
             }
 
             ssolution = ssolution.Distinct().ToList();
+
+            Dictionary<string, int> ch = new Dictionary<string, int>();
+            string f1 = answerRule.Split(';')[0].Split(',')[0], f2 = answerRule.Split(';')[0].Split(',')[1];
+            ch[f1] = 0;
+            ch[f2] = 0;
+            foreach (var r in ssolution)
+            {
+                var tt = r.Split(';')[1];
+                if (tt == f1)
+                    ch[f1] = 1;
+                else if (tt == f2)
+                        ch[f2] = 1;
+            }
+
+            if (!((ch[f1] == 1 || facts.Contains(f1))
+                && (ch[f2] == 1 || facts.Contains(f2)))
+                && ssolution.Count != 1)
+                ssolution.Clear();
+
 
             /*   foreach (var r in tempSolution)
                    if (!facts.Contains(r))
